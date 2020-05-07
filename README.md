@@ -6,7 +6,7 @@
 
 # Read Your Meter
 
-The read your meter integration can be used to read your house water consumption.
+The read your meter integration can be used to read your house water consumption and hopefully will enable you to save water and to early detect water leaks.
 
 ![Heat Map](./docs/water_meter.jpg)
 
@@ -19,7 +19,7 @@ There is currently support for the following device types within Home Assistant:
 For the integration to work, you need the following:
 
 - Account in read your meter
-- Selenuim standalone chrome running on same device as Home Assisatnt.
+- Selenuim standalone chrome running on same device as Home Assistant.
 
 ### Install Selenuim
 
@@ -34,13 +34,22 @@ docker run -d -p 4444:4444 --name selenium chadbutz/rpi-selenium-standalone-chro
 or with docker-compose
 
 ```
-TBD
+version: '2.1'
+
+services:
+
+  selenuim:
+    image: chadbutz/rpi-selenium-standalone-chrome
+    container_name: selenuim
+    ports:
+      - 4444:4444
+    restart: unless-stopped
 ```
 
 ### MANUAL INSTALLATION
 
 1. Download the `read_your_meter.zip` file from the
-   [latest release](https://github.com/eyalcha/Thermal/releases/latest).
+   [latest release](https://github.com/eyalcha/read_your_meter/releases/latest).
 2. Unpack the release and copy the `custom_components/read_your_meter` directory
    into the `custom_components` directory of your Home Assistant
    installation.
