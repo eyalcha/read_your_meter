@@ -104,9 +104,11 @@ The sensor state will be the current daily water consumption.
 
 The sensor attributes are :
 
-- Meter number
-- Last meter read read
-- Total monthly consumption (not implemented yet)
+- `meter_number` - Meter number
+- `last_read`: Last meter read
+- `monthly`: Total monthly consumption (not implemented yet)
+- `daily_state`: The last daily read state (e.g., approximate)
+- `monthly_state`: The last monthly read state (e.g., approximate)
 
 # Services
 

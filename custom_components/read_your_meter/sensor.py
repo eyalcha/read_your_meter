@@ -25,11 +25,11 @@ class ReadYourMeterSensor(Entity):
 
     def __init__(self, hass, config) -> None:
         """Init sensor"""
-        self._hass = hass
         self._name = 'Read your meter'
         self._state = 0
         self._attributes = {}
         self._icon = 'mdi:gauge'
+        self._client = hass.data[DOMAIN_DATA][DATA_CLIENT]
 
     @property
     def name(self):
@@ -55,20 +55,20 @@ class ReadYourMeterSensor(Entity):
     def should_poll(self):
         return True
 
+    @property
+    def unit_of_measurement(self):
+        """Return the unit of measurement."""
+        return 'm3'
+
     async def async_update(self) -> None:
         """Update"""
-        client = self.hass.data[DOMAIN_DATA][DATA_CLIENT]
-        daily_consumption = await client.async_get_daily_consumption()
-        for row in daily_consumption:
-            try: 
-                if len(row):
-                    date_time = datetime.strptime(row[0], '%d.%m.%Y')
-                    if datetime.now().date() == date_time.date():
-                        self._state = float(row[1])
-                        _LOGGER.debug(f"Update state {self._state}")
-                self._attributes = {
-                  "meter_number": client.meter_number,
-                  "last_read": client.last_read
-                }
-            except ValueError:
-                continue
+        await self._client.async_update_consumption()
+        self._state = self._client.daily
+        self._attributes = {
+            "meter_number": self._client.meter_number,
+            "monthly": self._client.monthly,
+            "last_read": self._client.last_read,
+            "daily_state": self._client.daily_state,
+            "monthly_state": self._client.monthly_state,
+        }
+        _LOGGER.debug(f"Update state {self._state}")
