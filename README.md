@@ -21,7 +21,7 @@ For the integration to work, you need the following:
 - Account in read your meter
 - Selenuim standalone chrome running on same device as Home Assisatnt.
 
-## Install Selenuim
+### Install Selenuim
 
 For installing [Sellenuim](https://www.selenium.dev/) please refere to the [offical documentation](https://www.selenium.dev/documentation/en/selenium_installation).
 
@@ -36,3 +36,76 @@ or with docker-compose
 ```
 TBD
 ```
+
+### MANUAL INSTALLATION
+
+1. Download the `read_your_meter.zip` file from the
+   [latest release](https://github.com/eyalcha/Thermal/releases/latest).
+2. Unpack the release and copy the `custom_components/read_your_meter` directory
+   into the `custom_components` directory of your Home Assistant
+   installation.
+3. Configure the `read_your_meter` integration.
+4. Restart Home Assistant.
+
+### INSTALLATION VIA HACS
+
+1. Ensure that [HACS](https://custom-components.github.io/hacs/) is installed.
+2. Search for and install the "thermal" integration.
+3. Configure the `read_your_meter` integration.
+4. Restart Home Assistant.
+
+## Configuration
+
+To enable this integration with the default configuration, add the following lines to your configuration.yaml file:
+
+```yaml
+read_your_meter:
+  host: Selenuim host url
+  username: Account user name
+  password: Account password
+```
+
+|Parameter |Required|Description
+|:---|---|---
+| `host` | Yes | Selenuim url (path & port)
+| `username` | Yes | Account username
+| `password` | Yes | Account password
+| `scan_interval` | No | NOT SUPPORTED YET **Default**: 1800 sec
+
+Here is an example for a configuration:
+
+```yaml
+# Example configuration.yaml entry
+
+read_your_meter
+  host: http://localhost:4444
+  username: john.brinston@gmail.com
+  password: verycomplicatedpassword
+```
+
+## Sensor
+
+The component will create single sensor: `sensor.read_your_meter`. Each scan interval period, the sensor will be updated with the new daily consumption state.
+
+##### State
+
+The sensor state will be the current daily water consumption.
+
+##### Attributes
+
+The sensor attributes are :
+
+- Meter number
+- Last meter read read
+- Total monthly consumption (not implemented yet)
+
+# Services
+
+TBI
+
+---
+
+I put a lot of work into making this repo and component available and updated to inspire and help others! I will be glad to receive thanks from you — it will give me new strength and add enthusiasm:
+<p align="center"><br>
+<a href="https://paypal.me/eyalco1967?locale.x=he_IL" target="_blank"><img src="http://khrolenok.ru/support_paypal.png" alt="PayPal" width="250" height="48"></a>
+</p>
