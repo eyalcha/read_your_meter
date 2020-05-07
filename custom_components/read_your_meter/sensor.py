@@ -12,7 +12,7 @@ from .const import (
 
 _LOGGER = logging.getLogger(__name__)
 
-SCAN_INTERVAL = timedelta(seconds=600)
+SCAN_INTERVAL = timedelta(seconds=1800)
 
 
 async def async_setup_platform(hass, config, async_add_entities, discovery_info=None):

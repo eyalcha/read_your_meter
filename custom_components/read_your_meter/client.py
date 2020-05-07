@@ -46,7 +46,6 @@ class Client:
             try:
                 element = driver.find_element_by_id('cphMain_lblMeterSN')
                 self._meter_number = element.text
-                _LOGGER.debug(f"{self._meter_number}")
             except NoSuchElementException:
                 pass
             try:
