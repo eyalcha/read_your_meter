@@ -25,6 +25,7 @@ class ReadYourMeterSensor(Entity):
 
     def __init__(self, hass, config) -> None:
         """Init sensor"""
+        self._hass = hass
         self._name = 'Read your meter'
         self._state = 0
         self._attributes = {}
@@ -62,7 +63,7 @@ class ReadYourMeterSensor(Entity):
 
     async def async_update(self) -> None:
         """Update"""
-        await self._client.async_update_consumption()
+        await self._hass.async_add_executor_job(self._client.update_consumption)
         self._state = self._client.daily
         self._attributes = {
             "meter_number": self._client.meter_number,

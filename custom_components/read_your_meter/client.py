@@ -29,7 +29,7 @@ class Client:
         self._daily_table = None
         self._monthly_table = None
 
-    async def async_update_consumption(self, start_date=None, end_date=None):
+    def update_consumption(self, start_date=None, end_date=None):
         self._daily_table = []
         self._monthly_table = []
 
