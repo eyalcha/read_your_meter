@@ -1,0 +1,8 @@
+{
+  "domain": "read_your_meter",
+  "name": "Read Your Meter",
+  "documentation": "",
+  "dependencies": [],
+  "codeowners": ["@eyalcha"],
+  "requirements": ["selenium", "beautifulsoup4"]
+}

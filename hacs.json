@@ -1,0 +1,5 @@
+{
+  "name": "Read Your Meter",
+  "domains": ["sensor"],
+  "homeassistant": "0.106.0"
+}
