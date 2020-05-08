@@ -23,7 +23,7 @@ For the integration to work, you need the following:
 
 ### Install Selenuim
 
-For installing [Sellenuim](https://www.selenium.dev/) please refere to the [offical documentation](https://www.selenium.dev/documentation/en/selenium_installation).
+For installing [Sellenuim](https://www.selenium.dev/) please refer to the [offical documentation](https://www.selenium.dev/documentation/en/selenium_installation).
 
 If you want to run the Sellenuim on Raspbery Pi, you can use the following command to download and start container with the following command:
 
@@ -76,7 +76,7 @@ read_your_meter:
 
 |Parameter |Required|Description
 |:---|---|---
-| `host` | Yes | Selenuim url (path & port)
+| `host` | No | Selenuim url (path & port) **Default** http://localhost:4444
 | `username` | Yes | Account username
 | `password` | Yes | Account password
 | `name` | No |  NOT SUPPORTED YET Sensors prefix **Default** Read your meter
@@ -119,7 +119,7 @@ attributes:
 state: Total water consumption monthly
 
 attributes:
-	reading_state: E.g., approximate etc.
+  reading_state: E.g., approximate etc.
 ```
 
 # Services
