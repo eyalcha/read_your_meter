@@ -6,8 +6,6 @@ import voluptuous as vol
 
 import homeassistant.helpers.config_validation as cv
 
-from integrationhelper.const import CC_STARTUP_VERSION
-
 from homeassistant.const import (
     CONF_HOST,
     CONF_NAME,
@@ -19,7 +17,7 @@ from homeassistant.const import (
 from .client import Client
 
 from .const import (
-    DOMAIN, DOMAIN_DATA, VERSION, ISSUE_URL,
+    DOMAIN, DOMAIN_DATA,
     DEFAULT_HOST, DEFAULT_NAME,
     DATA, DATA_CLIENT
 )
@@ -30,7 +28,7 @@ CONFIG_SCHEMA = vol.Schema({
     DOMAIN: vol.Schema({
         vol.Required(CONF_USERNAME): cv.string,
         vol.Required(CONF_PASSWORD): cv.string,
-        vol.Optional(CONF_HOST, DEFAULT_HOST): cv.url,
+        vol.Optional(CONF_HOST): cv.url,
         vol.Optional(CONF_NAME, DEFAULT_NAME): cv.string,
         vol.Optional(CONF_SCAN_INTERVAL): cv.time_period,
     })
@@ -39,17 +37,12 @@ CONFIG_SCHEMA = vol.Schema({
 
 async def async_setup(hass, config):
 
-    # Print startup message
-    _LOGGER.info(
-        CC_STARTUP_VERSION.format(name=DOMAIN, version=VERSION, issue_link=ISSUE_URL)
-    )
-
     # Check configuration exists
     conf = config.get(DOMAIN)
     if conf is None:
         return True
 
-    host = conf.get(CONF_HOST)
+    host = conf.get(CONF_HOST, DEFAULT_HOST)
     username = conf.get(CONF_USERNAME)
     password = conf.get(CONF_PASSWORD)
 
