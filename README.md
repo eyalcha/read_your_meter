@@ -79,6 +79,7 @@ read_your_meter:
 | `host` | Yes | Selenuim url (path & port)
 | `username` | Yes | Account username
 | `password` | Yes | Account password
+| `name` | No |  NOT SUPPORTED YET Sensors prefix **Default** Read your meter
 | `scan_interval` | No | NOT SUPPORTED YET **Default**: 1800 sec
 
 Here is an example for a configuration:
@@ -92,23 +93,34 @@ read_your_meter
   password: verycomplicatedpassword
 ```
 
-## Sensor
+## Sensors
 
-The component will create single sensor: `sensor.read_your_meter`. Each scan interval period, the sensor will be updated with the new daily consumption state.
+### `sensor.read_your_meter`
 
-##### State
+```
+state: Total water consumption
 
-The sensor state will be the current daily water consumption.
+attributes:
+	meter_number: Meter number
+```
 
-##### Attributes
+### `sensor.read_your_meter_daily`
 
-The sensor attributes are :
+```
+state: Total water consumption daily
 
-- `meter_number` - Meter number
-- `last_read`: Last meter read
-- `monthly`: Total monthly consumption (not implemented yet)
-- `daily_state`: The last daily read state (e.g., approximate)
-- `monthly_state`: The last monthly read state (e.g., approximate)
+attributes:
+	reading_state: E.g., approximate etc.
+```
+
+### `sensor.read_your_meter_monthly`
+
+```
+state: Total water consumption monthly
+
+attributes:
+	reading_state: E.g., approximate etc.
+```
 
 # Services
 

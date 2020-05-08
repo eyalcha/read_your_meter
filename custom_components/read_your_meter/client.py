@@ -1,5 +1,8 @@
+"""Meter client"""
+
 import logging
 import time
+import requests
 
 from datetime import datetime
 from urllib.parse import urljoin
@@ -26,20 +29,24 @@ class Client:
         self._password = password
         self._meter_number = None
         self._last_read = None
-        self._daily_table = None
-        self._monthly_table = None
-
-    def update_consumption(self, start_date=None, end_date=None):
         self._daily_table = []
         self._monthly_table = []
 
-        """Update"""
+    def update_data(self, start_date=None, end_date=None):
+        """Update consumption data"""
+        self._daily_table = []
+        self._monthly_table = []
+
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument('whitelisted-ips')
         chrome_options.add_argument('headless')
         chrome_options.add_argument('no-sandbox')
 
         try:
+            # Check selenuim connection
+            r = requests.get(urljoin(self._selenium, 'wd/hub/status'))
+            r.raise_for_status()
+
             with webdriver.Remote(command_executor=urljoin(self._selenium, 'wd/hub'),
                                 desired_capabilities=DesiredCapabilities.CHROME,
                                 options=chrome_options) as driver:
@@ -107,7 +114,15 @@ class Client:
                             self._monthly_table.append([ele for ele in cols if ele])
                 driver.close()
         except WebDriverException:
-            pass
+             _LOGGER.error('Webdriver error')
+        except requests.exceptions.HTTPError as errh:
+            _LOGGER.error('Sellenuim http error: %s', errh)
+        except requests.exceptions.ConnectionError as errc:
+            _LOGGER.error('Sellenuim error connecting: %s', errc)
+        except requests.exceptions.Timeout as errt:
+            _LOGGER.error("Sellenuim timeout error: %s", errt)
+        except requests.exceptions.RequestException as err:
+            _LOGGER.error("OOps: error: %s", err)
 
         return True
 

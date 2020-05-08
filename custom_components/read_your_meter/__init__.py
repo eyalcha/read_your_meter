@@ -1,14 +1,16 @@
 """Thermal integration"""
 
 import logging
-import voluptuous as vol
 
-from integrationhelper.const import CC_STARTUP_VERSION
+import voluptuous as vol
 
 import homeassistant.helpers.config_validation as cv
 
+from integrationhelper.const import CC_STARTUP_VERSION
+
 from homeassistant.const import (
     CONF_HOST,
+    CONF_NAME,
     CONF_USERNAME,
     CONF_PASSWORD,
     CONF_SCAN_INTERVAL
@@ -18,7 +20,7 @@ from .client import Client
 
 from .const import (
     DOMAIN, DOMAIN_DATA, VERSION, ISSUE_URL,
-    DEFAULT_HOST,
+    DEFAULT_HOST, DEFAULT_NAME,
     DATA, DATA_CLIENT
 )
 
@@ -29,6 +31,7 @@ CONFIG_SCHEMA = vol.Schema({
         vol.Required(CONF_USERNAME): cv.string,
         vol.Required(CONF_PASSWORD): cv.string,
         vol.Optional(CONF_HOST, DEFAULT_HOST): cv.url,
+        vol.Optional(CONF_NAME, DEFAULT_NAME): cv.string,
         vol.Optional(CONF_SCAN_INTERVAL): cv.time_period,
     })
 }, extra=vol.ALLOW_EXTRA)

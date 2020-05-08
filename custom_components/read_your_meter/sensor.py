@@ -5,31 +5,55 @@ import logging
 from datetime import datetime, timedelta
 
 from homeassistant.helpers.entity import Entity
+from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
+
 
 from .const import (
-    DOMAIN_DATA, DATA, DATA_CLIENT
+    DOMAIN_DATA, DATA, DATA_CLIENT,
+    DEFAULT_SCAN_INTERVAL, DEFAULT_NAME
 )
 
 _LOGGER = logging.getLogger(__name__)
 
-SCAN_INTERVAL = timedelta(seconds=1800)
-
 
 async def async_setup_platform(hass, config, async_add_entities, discovery_info=None):
-  """Setup sensor platform"""
-  async_add_entities([ReadYourMeterSensor(hass, config)], True)
+    """Setup sensor platform"""
+    
+    async def async_update_data():
+        try:
+            client = hass.data[DOMAIN_DATA][DATA_CLIENT]
+            await hass.async_add_executor_job(client.update_data)
+        except Exception as e:
+            raise UpdateFailed(f"Error communicating with server: {e}")
+
+    coordinator = DataUpdateCoordinator(
+        hass,
+        _LOGGER,
+        name="sensor",
+        update_method=async_update_data,
+        update_interval=timedelta(seconds=DEFAULT_SCAN_INTERVAL),
+    )
+
+    # Immediate refresh
+    await coordinator.async_request_refresh()
+
+    async_add_entities([
+        ReadYourMeterSensor(hass, coordinator, None, config),
+        ReadYourMeterSensor(hass, coordinator, 'daily', config),
+        ReadYourMeterSensor(hass, coordinator, 'monthly', config),
+        ])
 
 
 class ReadYourMeterSensor(Entity):
     """Read your meter sensor"""
 
-    def __init__(self, hass, config) -> None:
+    def __init__(self, hass, coordinator, period, config) -> None:
         """Init sensor"""
         self._hass = hass
-        self._name = 'Read your meter'
-        self._state = 0
-        self._attributes = {}
-        self._icon = 'mdi:gauge'
+        self._coordinator = coordinator
+        self._period = period
+        self._name = DEFAULT_NAME if not period else '{} {}'.format(DEFAULT_NAME, period)
+        self._icon = 'mdi:speedometer'
         self._client = hass.data[DOMAIN_DATA][DATA_CLIENT]
 
     @property
@@ -40,12 +64,29 @@ class ReadYourMeterSensor(Entity):
     @property
     def state(self):
         """Return the state of the sensor."""
-        return self._state
+        if self._period is 'daily':
+            return self._client.daily
+        elif self._period is 'monthly':
+            return self._client.monthly
+        else:
+            return self._client.last_read
 
     @property
     def device_state_attributes(self):
         """Return the attributes of the sensor."""
-        return self._attributes
+        if self._period is 'daily':
+            attributes = {
+                "reading_state": self._client.daily_state
+            }
+        elif self._period is 'monthly':
+            attributes = {
+                "reading_state": self._client.monthly_state
+            }
+        else:
+            attributes = {
+                "meter_number": self._client.meter_number
+            }
+        return attributes
 
     @property
     def icon(self):
@@ -54,22 +95,27 @@ class ReadYourMeterSensor(Entity):
 
     @property
     def should_poll(self):
-        return True
+        """No need to poll. Coordinator notifies entity of updates."""
+        return False
+
+    @property
+    def available(self):
+        """Return if entity is available."""
+        return self._coordinator.last_update_success
 
     @property
     def unit_of_measurement(self):
         """Return the unit of measurement."""
         return 'm3'
 
-    async def async_update(self) -> None:
-        """Update"""
-        await self._hass.async_add_executor_job(self._client.update_consumption)
-        self._state = self._client.daily
-        self._attributes = {
-            "meter_number": self._client.meter_number,
-            "monthly": self._client.monthly,
-            "last_read": self._client.last_read,
-            "daily_state": self._client.daily_state,
-            "monthly_state": self._client.monthly_state,
-        }
-        _LOGGER.debug(f"Update state {self._state}")
+    async def async_update(self):
+        """Update the entity. Only used by the generic entity update service."""
+        await self._coordinator.async_request_refresh()
+
+    async def async_added_to_hass(self):
+        """When entity is added to hass."""
+        self.async_on_remove(
+            self._coordinator.async_add_listener(
+                self.async_write_ha_state
+            )
+        )
