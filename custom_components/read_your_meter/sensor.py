@@ -65,23 +65,22 @@ class ReadYourMeterSensor(Entity):
     @property
     def state(self):
         """Return the state of the sensor."""
-        if self._period is 'daily':
-            return self._client.daily
-        elif self._period is 'monthly':
-            return self._client.monthly
+        if self._period:
+            return self._client.consumption(self._period)
         else:
             return self._client.last_read
 
     @property
     def device_state_attributes(self):
         """Return the attributes of the sensor."""
-        if self._period is 'daily':
+        if self._period:
+            statistics = self._client.statistics(self._period)
+            print(statistics)
             attributes = {
-                "reading_state": self._client.daily_state
-            }
-        elif self._period is 'monthly':
-            attributes = {
-                "reading_state": self._client.monthly_state
+                "avg": statistics['avg'],
+                "min": statistics['min'],
+                "max": statistics['max'],
+                "reading_state": self._client.state(self._period)
             }
         else:
             attributes = {

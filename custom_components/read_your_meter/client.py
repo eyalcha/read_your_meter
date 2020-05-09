@@ -16,6 +16,8 @@ from selenium.common.exceptions import TimeoutException, NoSuchElementException,
 
 from bs4 import BeautifulSoup
 
+from .utils import truncate
+
 _LOGGER = logging.getLogger(__name__)
 
 
@@ -96,7 +98,12 @@ class Client:
                         for row in table.find('tbody').find_all('tr'):
                             cols = row.find_all('td')
                             cols = [ele.text.strip() for ele in cols]
-                            self._daily_table.append([ele for ele in cols if ele])
+                            if len(cols):
+                                self._daily_table.append([ele for ele in cols if ele])
+                        # Remove table summary
+                        if len(self._daily_table):
+                            self._daily_table.pop()
+                        print(self._daily_table)
                 # Switch to monthly
                 element = driver.find_element_by_id('btn_period_type_0')
                 webdriver.ActionChains(driver).move_to_element(element).click(element).perform()
@@ -111,7 +118,11 @@ class Client:
                         for row in table.find('tbody').find_all('tr'):
                             cols = row.find_all('td')
                             cols = [ele.text.strip() for ele in cols]
-                            self._monthly_table.append([ele for ele in cols if ele])
+                            if len(cols):
+                                self._monthly_table.append([ele for ele in cols if ele])
+                        # Remove table summary
+                        if len(self._monthly_table):
+                            self._monthly_table.pop()
                 driver.close()
         except WebDriverException:
              _LOGGER.error('Webdriver error')
@@ -126,57 +137,38 @@ class Client:
 
         return True
 
-    @property
-    def daily(self):
-        value = None
-        for row in self._daily_table:
-            try:
-                if len(row):
-                    date_time = datetime.strptime(row[0], '%d.%m.%Y')
-                    if datetime.now().date() == date_time.date():
-                        value = float(row[1])
-            except ValueError:
-                pass
-        return value
+    def consumption(self, period):
+        """Return consumption"""
+        if period == 'monthly':
+            table = self._monthly_table
+        else:
+            table = self._daily_table
+        if len(table) == 0:
+            return None
+        return float(table[-1][1])
 
-    @property
-    def daily_state(self):
-        value = '-'
-        for row in self._daily_table:
-            try:
-                if len(row):
-                    date_time = datetime.strptime(row[0], '%d.%m.%Y')
-                    if datetime.now().date() == date_time.date():
-                        value = row[4]
-            except ValueError:
-                pass
-        return value
+    def state(self, period):
+        """Return consumption state"""
+        if period == 'monthly':
+            table = self._monthly_table
+        else:
+            table = self._daily_table
+        if len(table) == 0:
+            return None
+        return table[-1][4]
 
-    @property
-    def monthly(self):
-        value = None
-        for row in self._monthly_table:
-            try:
-                if len(row):
-                    date_time = datetime.strptime(row[0], '%m.%Y')
-                    if datetime.now().month == date_time.month:
-                        value = float(row[1])
-            except ValueError:
-                pass
-        return value
-
-    @property
-    def monthly_state(self):
-        value = '-'
-        for row in self._daily_table:
-            try:
-                if len(row):
-                    date_time = datetime.strptime(row[0], '%m.%Y')
-                    if datetime.now().month == date_time.month:
-                        value = row[4]
-            except ValueError:
-                pass
-        return value
+    def statistics(self, period):
+        """Return consumption statistics"""
+        if period == 'monthly':
+            table = self._monthly_table
+        else:
+            table = self._daily_table
+        values = [float(row[1]) for row in table[:-1]]
+        return {
+            'avg': truncate(sum(values) / len(values), 2),
+            'min': min(values),
+            'max': max(values)
+        }
 
     @property
     def meter_number(self):
