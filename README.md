@@ -82,9 +82,9 @@ To enable this integration with the default configuration, add the following lin
 
 ```yaml
 read_your_meter:
-	host: Selenuim host url
-	username: Account user name
-	password: Account password
+  host: Selenuim host url
+  username: Account user name
+  password: Account password
 ```
 
 |Parameter |Required|Description
@@ -100,10 +100,10 @@ Here is an example for a configuration:
 ```yaml
 # Example configuration.yaml entry
 
-read_your_meter
-	host: http://localhost:4444
-	username: john.brinston@gmail.com
-	password: verycomplicatedpassword
+read_your_meter:
+  host: http://localhost:4444
+  username: john.brinston@gmail.com
+  password: verycomplicatedpassword
 ```
 
 ## Sensors
