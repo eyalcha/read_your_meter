@@ -27,6 +27,8 @@ For the integration to work, you need the following:
 
 For installing [Sellenuim](https://www.selenium.dev/) please refer to the [offical documentation](https://www.selenium.dev/documentation/en/selenium_installation).
 
+#### Raspberry PI
+
 If you want to run the Sellenuim on Raspbery Pi, you can use the following command to download and start container with the following command:
 
 ```
@@ -46,6 +48,15 @@ services:
     ports:
       - 4444:4444
     restart: unless-stopped
+```
+
+#### Ubuntu
+
+For unbuntu, the offical image of selenuim can be used:
+
+
+```
+docker run -d -p 4444:4444 --name selenium selenium/standalone-chrome
 ```
 
 ### MANUAL INSTALLATION
@@ -71,16 +82,16 @@ To enable this integration with the default configuration, add the following lin
 
 ```yaml
 read_your_meter:
-  host: Selenuim host url
-  username: Account user name
-  password: Account password
+	host: Selenuim host url
+	username: Account user name
+	password: Account password
 ```
 
 |Parameter |Required|Description
 |:---|---|---
-| `host` | No | Selenuim url (path & port) **Default** http://localhost:4444
 | `username` | Yes | Account username
 | `password` | Yes | Account password
+| `host` | No | Selenuim url (path & port) **Default** http://localhost:4444
 | `name` | No |  NOT SUPPORTED YET Sensors prefix **Default** Read your meter
 | `scan_interval` | No | NOT SUPPORTED YET **Default**: 1800 sec
 
@@ -90,9 +101,9 @@ Here is an example for a configuration:
 # Example configuration.yaml entry
 
 read_your_meter
-  host: http://localhost:4444
-  username: john.brinston@gmail.com
-  password: verycomplicatedpassword
+	host: http://localhost:4444
+	username: john.brinston@gmail.com
+	password: verycomplicatedpassword
 ```
 
 ## Sensors
@@ -112,6 +123,9 @@ attributes:
 state: Total water consumption daily
 
 attributes:
+	avg: Last 30 days average consumption
+	min: Last 30 days min value
+	max: Last 30 days max value
 	reading_state: E.g., approximate etc.
 ```
 
@@ -121,7 +135,10 @@ attributes:
 state: Total water consumption monthly
 
 attributes:
-  reading_state: E.g., approximate etc.
+	avg: Last 12 month average consumption
+	min: Last 12 month min value
+	max: Last 12 month max value
+	reading_state: E.g., approximate etc.
 ```
 
 # Services
