@@ -10,7 +10,8 @@ from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, Upda
 
 from .const import (
     DOMAIN_DATA, DATA, DATA_CLIENT,
-    DEFAULT_SCAN_INTERVAL, DEFAULT_NAME
+    DEFAULT_SCAN_INTERVAL, DEFAULT_NAME, DEFAULT_ICON,
+    DEFAULT_UNIT_OF_MEASUREMENTS
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -53,7 +54,7 @@ class ReadYourMeterSensor(Entity):
         self._coordinator = coordinator
         self._period = period
         self._name = DEFAULT_NAME if not period else '{} {}'.format(DEFAULT_NAME, period)
-        self._icon = 'mdi:speedometer'
+        self._icon = DEFAULT_ICON
         self._client = hass.data[DOMAIN_DATA][DATA_CLIENT]
 
     @property
@@ -106,7 +107,7 @@ class ReadYourMeterSensor(Entity):
     @property
     def unit_of_measurement(self):
         """Return the unit of measurement."""
-        return 'm3'
+        return DEFAULT_UNIT_OF_MEASUREMENTS
 
     async def async_update(self):
         """Update the entity. Only used by the generic entity update service."""

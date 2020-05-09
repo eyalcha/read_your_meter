@@ -1,6 +1,6 @@
 {
   "name": "Read Your Meter",
   "domains": ["sensor"],
-  "country": ["IL"],
+  "country": "IL",
   "homeassistant": "0.106.0"
 }
