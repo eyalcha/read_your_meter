@@ -53,7 +53,7 @@ class Client:
                                 desired_capabilities=DesiredCapabilities.CHROME,
                                 options=chrome_options) as driver:
                 # Login
-                _LOGGER.debug('Login')
+                # _LOGGER.debug('Login')
                 driver.implicitly_wait(5)
                 driver.get(self._host)
                 driver.find_element_by_id('txtEmail').send_keys(self._username)
@@ -78,7 +78,7 @@ class Client:
                     _LOGGER.error('Loading of my consumption page took too much time')
                     driver.close()
                     return False
-                _LOGGER.debug(f"{driver.current_url}")
+                # _LOGGER.debug(f"{driver.current_url}")
                 # Switch to daily table view
                 element = driver.find_element_by_id('btn_table')
                 webdriver.ActionChains(driver).move_to_element(element).click(element).perform()            
@@ -88,7 +88,7 @@ class Client:
                     _LOGGER.error('Loading of table took too much time')
                     driver.close()
                     return False
-                _LOGGER.debug(f"{driver.current_url}")
+                # _LOGGER.debug(f"{driver.current_url}")
                 html = driver.page_source
                 # Extract daily table
                 if html:
@@ -103,12 +103,11 @@ class Client:
                         # Remove table summary
                         if len(self._daily_table):
                             self._daily_table.pop()
-                        print(self._daily_table)
                 # Switch to monthly
                 element = driver.find_element_by_id('btn_period_type_0')
                 webdriver.ActionChains(driver).move_to_element(element).click(element).perform()
                 time.sleep(1)
-                _LOGGER.debug(f"{driver.current_url}")
+                # _LOGGER.debug(f"{driver.current_url}")
                 html = driver.page_source
                 # Extract daily table
                 if html:

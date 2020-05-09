@@ -75,7 +75,6 @@ class ReadYourMeterSensor(Entity):
         """Return the attributes of the sensor."""
         if self._period:
             statistics = self._client.statistics(self._period)
-            print(statistics)
             attributes = {
                 "avg": statistics['avg'],
                 "min": statistics['min'],
