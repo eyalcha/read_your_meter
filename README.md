@@ -145,6 +145,16 @@ attributes:
 
 TBI
 
+# Lovelace
+
+An example view of Meter data. It includes:
+
+- Meter data
+- Daily graph (Grafana IFrame)
+- Threshold for exceeded notifications
+
+![Heat Map](./docs/lovelace.jpg)
+
 ---
 
 I put a lot of work into making this repo and component available and updated to inspire and help others! I will be glad to receive thanks from you — it will give me new strength and add enthusiasm:
