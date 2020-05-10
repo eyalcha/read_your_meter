@@ -34,6 +34,7 @@ class Client:
         self._daily_table = []
         self._monthly_table = []
 
+
     def update_data(self, start_date=None, end_date=None):
         """Update consumption data"""
         self._daily_table = []
@@ -163,19 +164,15 @@ class Client:
         else:
             table = self._daily_table
         values = [float(row[1]) for row in table[:-1]]
-        try:
+        if len(values):
             return {
                 'avg': truncate(sum(values) / len(values), 2),
                 'min': min(values),
                 'max': max(values)
-            }            
-        except ZeroDivisionError as e:
-            _LOGGER.debug(f"Statistics failure {values}")
-            return {
-                'avg': 0,
-                'min': min(values),
-                'max': max(values)
             }
+        else:
+            _LOGGER.debug(f"Failed to calculate {period} statistics")
+            return {}
 
     @property
     def meter_number(self):
