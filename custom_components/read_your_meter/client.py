@@ -37,8 +37,8 @@ class Client:
 
     def update_data(self, start_date=None, end_date=None):
         """Update consumption data"""
-        self._daily_table = []
-        self._monthly_table = []
+        daily_table = []
+        monthly_table = []
 
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument('whitelisted-ips')
@@ -100,10 +100,10 @@ class Client:
                             cols = row.find_all('td')
                             cols = [ele.text.strip() for ele in cols]
                             if len(cols):
-                                self._daily_table.append([ele for ele in cols if ele])
+                                daily_table.append([ele for ele in cols if ele])
                         # Remove table summary
-                        if len(self._daily_table):
-                            self._daily_table.pop()
+                        if len(daily_table):
+                            daily_table.pop()
                 # Switch to monthly
                 element = driver.find_element_by_id('btn_period_type_0')
                 webdriver.ActionChains(driver).move_to_element(element).click(element).perform()
@@ -119,10 +119,13 @@ class Client:
                             cols = row.find_all('td')
                             cols = [ele.text.strip() for ele in cols]
                             if len(cols):
-                                self._monthly_table.append([ele for ele in cols if ele])
+                                monthly_table.append([ele for ele in cols if ele])
                         # Remove table summary
-                        if len(self._monthly_table):
-                            self._monthly_table.pop()
+                        if len(monthly_table):
+                            monthly_table.pop()
+                # Update new values
+                self._daily_table = daily_table
+                self._monthly_table = monthly_table
                 driver.close()
         except WebDriverException:
              _LOGGER.error('Webdriver error')
