@@ -163,11 +163,19 @@ class Client:
         else:
             table = self._daily_table
         values = [float(row[1]) for row in table[:-1]]
-        return {
-            'avg': truncate(sum(values) / len(values), 2),
-            'min': min(values),
-            'max': max(values)
-        }
+        try:
+            return {
+                'avg': truncate(sum(values) / len(values), 2),
+                'min': min(values),
+                'max': max(values)
+            }            
+        except ZeroDivisionError as e:
+            _LOGGER.debug(f"Statistics failure {values}")
+            return {
+                'avg': 0,
+                'min': min(values),
+                'max': max(values)
+            }
 
     @property
     def meter_number(self):
