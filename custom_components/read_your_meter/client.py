@@ -34,7 +34,6 @@ class Client:
         self._daily_table = []
         self._monthly_table = []
 
-
     def update_data(self, start_date=None, end_date=None):
         """Update consumption data"""
         daily_table = []
