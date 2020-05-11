@@ -175,13 +175,13 @@ Threshold input:
 
 ```
 input_number:
-	water_meter_daily_threshold:
-	  name: Daily Max Threshold
-	  icon: mdi:speedometer
-	  unit_of_measurement: "m3"
-	  min: 0
-	  max: 2
-	  step: 0.1
+  water_meter_daily_threshold:
+    name: Daily Max Threshold
+    icon: mdi:speedometer
+    unit_of_measurement: "m3"
+    min: 0
+    max: 2
+    step: 0.1
 ```
 
 Notification Automation:
