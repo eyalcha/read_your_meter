@@ -155,6 +155,54 @@ An example view of Meter data. It includes:
 
 ![Heat Map](./docs/lovelace.jpg)
 
+### Threshold Cards
+
+```
+  - type: entities
+    show_header_toggle: false
+    entities:
+      - type: custom:slider-entity-row
+        entity: input_number.water_meter_daily_threshold
+      - type: custom:slider-entity-row
+        entity: input_number.water_meter_monthly_threshold
+```
+
+# Automations
+
+The following example shows how to be notified when unusual daily usage has exceeded some threshold.
+
+Threshold input:
+
+```
+input_number:
+	water_meter_daily_threshold:
+	  name: Daily Max Threshold
+	  icon: mdi:speedometer
+	  unit_of_measurement: "m3"
+	  min: 0
+	  max: 2
+	  step: 0.1
+```
+
+Notification Automation:
+
+```
+automation:
+	- alias: Notify daily water usage exceed threshold
+	  trigger:
+	    - platform: state
+	      entity_id: sensor.read_your_meter_daily
+	  condition:
+	    - condition: template
+	      value_template: "{{ states('sensor.read_your_meter_daily') | float >= states('input_number.water_meter_daily_threshold') | float }}"
+	  action:
+	    - service: notify.Telegram
+	      data_template:
+	        message: >
+	          Daily water usage {{ states('sensor.read_your_meter_daily') }} has exceeded daily threshold, please check for leaks.
+  
+```
+
 ---
 
 I put a lot of work into making this repo and component available and updated to inspire and help others! I will be glad to receive thanks from you — it will give me new strength and add enthusiasm:
