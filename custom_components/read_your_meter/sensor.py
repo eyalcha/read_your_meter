@@ -76,9 +76,9 @@ class ReadYourMeterSensor(Entity):
         if self._period:
             statistics = self._client.statistics(self._period)
             attributes = {
-                "avg": statistics['avg'],
-                "min": statistics['min'],
-                "max": statistics['max'],
+                "avg": statistics['avg'] if 'avg' in statistics else 0,
+                "min": statistics['min'] if 'min' in statistics else 0,
+                "max": statistics['max'] if 'max' in statistics else 0,
                 "reading_state": self._client.state(self._period)
             }
         else:
