@@ -72,7 +72,7 @@ docker run -d -p 4444:4444 --name selenium selenium/standalone-chrome
 ### INSTALLATION VIA HACS
 
 1. Ensure that [HACS](https://custom-components.github.io/hacs/) is installed.
-2. Search for and install the "thermal" integration.
+2. Search for and install the `read_your_meter` integration.
 3. Configure the `read_your_meter` integration.
 4. Restart Home Assistant.
 
