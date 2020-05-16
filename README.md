@@ -96,7 +96,17 @@ read_your_meter:
 | `scan_interval` | No | NOT SUPPORTED YET **Default**: 1800 sec
 | `daily` | No | List of days information, starting 0 as today and up to 3 (three days ago). **Default** 0
 | `monthly` | No | List of month information, starting 0 as this month and up to 3 (three month ago). **Default** 0
-Here is an example for a configuration:
+Here is an example for a minimal configuration:
+
+```yaml
+# Example configuration.yaml entry
+
+read_your_meter:
+  username: john.brinston@gmail.com
+  password: verycomplicatedpassword
+```
+
+Advance configuration:
 
 ```yaml
 # Example configuration.yaml entry
@@ -105,6 +115,14 @@ read_your_meter:
   host: http://localhost:4444
   username: john.brinston@gmail.com
   password: verycomplicatedpassword
+  daily:
+    - 0
+    - 1
+  monthly:
+    - 0
+    - 1
+    - 2
+    - 3
 ```
 
 ## Sensors

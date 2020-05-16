@@ -40,10 +40,10 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
     await coordinator.async_request_refresh()
     
     entities = [ReadYourMeterSensor(hass, coordinator)]
-    for i, v in enumerate(discovery_info.get(CONF_DAILY)):
-        entities.append(ReadYourMeterSensor(hass, coordinator, 'daily', i))
-    for i, v in enumerate(discovery_info.get(CONF_MONTHLY)):
-        entities.append(ReadYourMeterSensor(hass, coordinator, 'monthly', i))
+    for d in discovery_info.get(CONF_DAILY):
+        entities.append(ReadYourMeterSensor(hass, coordinator, 'daily', d))
+    for m in discovery_info.get(CONF_MONTHLY):
+        entities.append(ReadYourMeterSensor(hass, coordinator, 'monthly', m))
     async_add_entities(entities)
 
 
