@@ -94,7 +94,8 @@ read_your_meter:
 | `host` | No | Selenuim url (path & port) **Default** http://localhost:4444
 | `name` | No |  NOT SUPPORTED YET Sensors prefix **Default** Read your meter
 | `scan_interval` | No | NOT SUPPORTED YET **Default**: 1800 sec
-
+| `daily` | No | List of days information, starting 0 as today and up to 3 (three days ago). **Default** 0
+| `monthly` | No | List of month information, starting 0 as this month and up to 3 (three month ago). **Default** 0
 Here is an example for a configuration:
 
 ```yaml
@@ -123,9 +124,20 @@ attributes:
 state: Total water consumption daily
 
 attributes:
+   date: Rading day date
 	avg: Last 30 days average consumption
 	min: Last 30 days min value
 	max: Last 30 days max value
+	reading_state: E.g., approximate etc.
+```
+
+### `sensor.read_your_meter_daily_<x>`
+
+```
+state: Total water consumption daily (x days ago)
+
+attributes:
+   date: Rading day date
 	reading_state: E.g., approximate etc.
 ```
 
@@ -135,9 +147,20 @@ attributes:
 state: Total water consumption monthly
 
 attributes:
+   date: Reading month date
 	avg: Last 12 month average consumption
 	min: Last 12 month min value
 	max: Last 12 month max value
+	reading_state: E.g., approximate etc.
+```
+
+### `sensor.read_your_meter_monthly_<x>`
+
+```
+state: Total water consumption monthly (x month ago)
+
+attributes:
+   date: Reading month date
 	reading_state: E.g., approximate etc.
 ```
 

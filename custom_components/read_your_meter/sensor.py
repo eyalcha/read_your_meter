@@ -10,6 +10,7 @@ from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, Upda
 
 from .const import (
     DOMAIN_DATA, DATA, DATA_CLIENT,
+    CONF_DAILY, CONF_MONTHLY,
     DEFAULT_SCAN_INTERVAL, DEFAULT_NAME, DEFAULT_ICON,
     DEFAULT_UNIT_OF_MEASUREMENTS
 )
@@ -19,7 +20,7 @@ _LOGGER = logging.getLogger(__name__)
 
 async def async_setup_platform(hass, config, async_add_entities, discovery_info=None):
     """Setup sensor platform"""
-    
+
     async def async_update_data():
         try:
             client = hass.data[DOMAIN_DATA][DATA_CLIENT]
@@ -37,36 +38,42 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
 
     # Immediate refresh
     await coordinator.async_request_refresh()
-
-    async_add_entities([
-        ReadYourMeterSensor(hass, coordinator, None, config),
-        ReadYourMeterSensor(hass, coordinator, 'daily', config),
-        ReadYourMeterSensor(hass, coordinator, 'monthly', config),
-        ])
+    
+    entities = [ReadYourMeterSensor(hass, coordinator)]
+    for i, v in enumerate(discovery_info.get(CONF_DAILY)):
+        entities.append(ReadYourMeterSensor(hass, coordinator, 'daily', i))
+    for i, v in enumerate(discovery_info.get(CONF_MONTHLY)):
+        entities.append(ReadYourMeterSensor(hass, coordinator, 'monthly', i))
+    async_add_entities(entities)
 
 
 class ReadYourMeterSensor(Entity):
     """Read your meter sensor"""
 
-    def __init__(self, hass, coordinator, period, config) -> None:
+    def __init__(self, hass, coordinator, period=None, index=None) -> None:
         """Init sensor"""
         self._hass = hass
         self._coordinator = coordinator
         self._period = period
-        self._name = DEFAULT_NAME if not period else '{} {}'.format(DEFAULT_NAME, period)
+        self._index = index
         self._icon = DEFAULT_ICON
         self._client = hass.data[DOMAIN_DATA][DATA_CLIENT]
+        _LOGGER.debug(f"Add sensor period:{self._period} index:{self._index} icon:{ self._icon}")
 
     @property
     def name(self):
         """Return the name of the sensor."""
-        return self._name
+        if not self._period:
+            return DEFAULT_NAME
+        elif self._index == 0:
+            return '{} {}'.format(DEFAULT_NAME, self._period)
+        return '{} {} {}'.format(DEFAULT_NAME, self._period, self._index)
 
     @property
     def state(self):
         """Return the state of the sensor."""
         if self._period:
-            return self._client.consumption(self._period)
+            return self._client.consumption(self._period, self._index)
         else:
             return self._client.last_read
 
@@ -75,12 +82,19 @@ class ReadYourMeterSensor(Entity):
         """Return the attributes of the sensor."""
         if self._period:
             statistics = self._client.statistics(self._period)
-            attributes = {
-                "avg": statistics['avg'] if 'avg' in statistics else 0,
-                "min": statistics['min'] if 'min' in statistics else 0,
-                "max": statistics['max'] if 'max' in statistics else 0,
-                "reading_state": self._client.state(self._period)
-            }
+            if self._index == 0:
+                attributes = {
+                    "date": self._client.date(self._period, self._index),
+                    "avg": statistics['avg'] if 'avg' in statistics else 0,
+                    "min": statistics['min'] if 'min' in statistics else 0,
+                    "max": statistics['max'] if 'max' in statistics else 0,
+                    "reading_state": self._client.state(self._period, self._index)
+                }
+            else:
+                attributes = {
+                    "date": self._client.date(self._period, self._index),
+                    "reading_state": self._client.state(self._period, self._index)
+                }
         else:
             attributes = {
                 "meter_number": self._client.meter_number

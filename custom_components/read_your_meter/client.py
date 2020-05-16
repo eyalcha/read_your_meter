@@ -139,32 +139,33 @@ class Client:
 
         return True
 
-    def consumption(self, period):
+    def consumption(self, period, index=0):
         """Return consumption"""
-        if period == 'monthly':
-            table = self._monthly_table
-        else:
-            table = self._daily_table
-        if len(table) == 0:
-            return None
-        return float(table[-1][1])
-
-    def state(self, period):
+        try:
+            table = self._monthly_table if period == 'monthly' else self._daily_table
+            return float(table[-1 - index][1])
+        except IndexError:
+           return None
+ 
+    def state(self, period, index=0):
         """Return consumption state"""
-        if period == 'monthly':
-            table = self._monthly_table
-        else:
-            table = self._daily_table
-        if len(table) == 0:
-            return None
-        return table[-1][4]
+        try:
+            table = self._monthly_table if period == 'monthly' else self._daily_table
+            return table[-1 - index][4]
+        except IndexError:
+           return None    
+
+    def date(self, period, index=0):
+        """Return consumption date"""
+        try:
+            table = self._monthly_table if period == 'monthly' else self._daily_table
+            return table[-1 - index][0]
+        except IndexError:
+           return None    
 
     def statistics(self, period):
         """Return consumption statistics"""
-        if period == 'monthly':
-            table = self._monthly_table
-        else:
-            table = self._daily_table
+        table = self._monthly_table if period == 'monthly' else self._daily_table
         values = [float(row[1]) for row in table[:-1]]
         if len(values):
             return {

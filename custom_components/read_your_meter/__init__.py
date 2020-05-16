@@ -18,7 +18,8 @@ from .client import Client
 
 from .const import (
     DOMAIN, DOMAIN_DATA,
-    DEFAULT_HOST, DEFAULT_NAME,
+    CONF_DAILY, CONF_MONTHLY,
+    DEFAULT_HOST, DEFAULT_NAME, DEFAULT_DAILY, DEFAULT_MONTHLY,
     DATA, DATA_CLIENT
 )
 
@@ -28,9 +29,15 @@ CONFIG_SCHEMA = vol.Schema({
     DOMAIN: vol.Schema({
         vol.Required(CONF_USERNAME): cv.string,
         vol.Required(CONF_PASSWORD): cv.string,
-        vol.Optional(CONF_HOST): cv.url,
+        vol.Optional(CONF_HOST, default=DEFAULT_HOST): cv.url,
         vol.Optional(CONF_NAME, DEFAULT_NAME): cv.string,
         vol.Optional(CONF_SCAN_INTERVAL): cv.time_period,
+        vol.Optional(CONF_DAILY, default=DEFAULT_DAILY): vol.All(
+            cv.ensure_list, [vol.Range(min=0, max=3)]
+        ),
+        vol.Optional(CONF_MONTHLY, default=DEFAULT_MONTHLY): vol.All(
+            cv.ensure_list, [vol.Range(min=0, max=3)]
+        ),
     })
 }, extra=vol.ALLOW_EXTRA)
 
@@ -42,7 +49,7 @@ async def async_setup(hass, config):
     if conf is None:
         return True
 
-    host = conf.get(CONF_HOST, DEFAULT_HOST)
+    host = conf.get(CONF_HOST)
     username = conf.get(CONF_USERNAME)
     password = conf.get(CONF_PASSWORD)
 
@@ -56,7 +63,7 @@ async def async_setup(hass, config):
 
     # Add sensors
     hass.async_create_task(
-        hass.helpers.discovery.async_load_platform('sensor', DOMAIN, {}, config)
+        hass.helpers.discovery.async_load_platform('sensor', DOMAIN, conf, config)
     )
 
     # Initialization was successful.
