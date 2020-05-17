@@ -196,6 +196,48 @@ An example view of Meter data. It includes:
 
 ![Heat Map](./docs/lovelace.jpg)
 
+### Information Cards
+
+```
+- type: entities
+	show_header_toggle: false
+	entities:
+	  - type: attribute
+	    entity: sensor.read_your_meter
+	    attribute: meter_number
+	    name: Meter Number
+	  - entity: sensor.read_your_meter
+	    name: Total
+	  - entity: sensor.read_your_meter_daily
+	    type: custom:multiple-entity-row
+	    name: Daily
+	    show_state: false
+	    secondary_info: last-changed
+	    icon: mdi:calendar-today
+	    entities:
+	      - attribute: min
+	        name: Min
+	      - entity: sensor.read_your_meter_daily
+	        name: Current
+	        unit: ' '
+	      - attribute: max
+	        name: Max
+	  - entity: sensor.read_your_meter_monthly
+	    type: custom:multiple-entity-row
+	    name: Monthly
+	    show_state: false
+	    secondary_info: last-changed
+	    icon: mdi:calendar-month
+	    entities:
+	      - attribute: min
+	        name: Min
+	      - entity: sensor.read_your_meter_monthly
+	        name: Current
+	        unit: ' '
+	      - attribute: max
+	        name: Max
+```
+
 ### Threshold Cards
 
 ```
