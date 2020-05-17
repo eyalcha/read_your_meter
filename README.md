@@ -199,7 +199,7 @@ An example view of Meter data. It includes:
 ### Information Cards
 
 ```
-- type: entities
+  - type: entities
 	show_header_toggle: false
 	entities:
 	  - type: attribute
