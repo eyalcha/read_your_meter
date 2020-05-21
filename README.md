@@ -94,6 +94,7 @@ read_your_meter:
 | `host` | No | Selenuim url (path & port) **Default** http://localhost:4444
 | `name` | No |  NOT SUPPORTED YET Sensors prefix **Default** Read your meter
 | `scan_interval` | No | NOT SUPPORTED YET **Default**: 1800 sec
+| `unit_of_measurement` | No | Consumption unit of measurement **Default**: m³
 | `daily` | No | List of days information, starting 0 as today and up to 3 (three days ago). **Default** 0
 | `monthly` | No | List of month information, starting 0 as this month and up to 3 (three month ago). **Default** 0
 Here is an example for a minimal configuration:
@@ -261,7 +262,7 @@ input_number:
   water_meter_daily_threshold:
     name: Daily Max Threshold
     icon: mdi:speedometer
-    unit_of_measurement: "m3"
+    unit_of_measurement: "m³"
     min: 0
     max: 2
     step: 0.1

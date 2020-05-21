@@ -7,12 +7,14 @@ from datetime import datetime, timedelta
 from homeassistant.helpers.entity import Entity
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
+from homeassistant.const import (
+    CONF_UNIT_OF_MEASUREMENT
+)
 
 from .const import (
     DOMAIN_DATA, DATA, DATA_CLIENT,
     CONF_DAILY, CONF_MONTHLY,
-    DEFAULT_SCAN_INTERVAL, DEFAULT_NAME, DEFAULT_ICON,
-    DEFAULT_UNIT_OF_MEASUREMENTS
+    DEFAULT_SCAN_INTERVAL, DEFAULT_NAME, DEFAULT_ICON
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -39,18 +41,18 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
     # Immediate refresh
     await coordinator.async_request_refresh()
     
-    entities = [ReadYourMeterSensor(hass, coordinator)]
+    entities = [ReadYourMeterSensor(hass, discovery_info, coordinator)]
     for d in discovery_info.get(CONF_DAILY):
-        entities.append(ReadYourMeterSensor(hass, coordinator, 'daily', d))
+        entities.append(ReadYourMeterSensor(hass, discovery_info, coordinator, 'daily', d))
     for m in discovery_info.get(CONF_MONTHLY):
-        entities.append(ReadYourMeterSensor(hass, coordinator, 'monthly', m))
+        entities.append(ReadYourMeterSensor(hass, discovery_info, coordinator, 'monthly', m))
     async_add_entities(entities)
 
 
 class ReadYourMeterSensor(Entity):
     """Read your meter sensor"""
 
-    def __init__(self, hass, coordinator, period=None, index=None) -> None:
+    def __init__(self, hass, config, coordinator, period=None, index=None) -> None:
         """Init sensor"""
         self._hass = hass
         self._coordinator = coordinator
@@ -58,6 +60,7 @@ class ReadYourMeterSensor(Entity):
         self._index = index
         self._icon = DEFAULT_ICON
         self._client = hass.data[DOMAIN_DATA][DATA_CLIENT]
+        self._unit_of_measurement = config.get(CONF_UNIT_OF_MEASUREMENT)
         _LOGGER.debug(f"Add sensor period:{self._period} index:{self._index} icon:{ self._icon}")
 
     @property
@@ -119,7 +122,7 @@ class ReadYourMeterSensor(Entity):
     @property
     def unit_of_measurement(self):
         """Return the unit of measurement."""
-        return DEFAULT_UNIT_OF_MEASUREMENTS
+        return self._unit_of_measurement
 
     async def async_update(self):
         """Update the entity. Only used by the generic entity update service."""

@@ -12,7 +12,7 @@ DEFAULT_DAILY=[0]
 DEFAULT_MONTHLY=[0]
 DEFAULT_NAME = "Read your meter"
 DEFAULT_ICON = "mdi:speedometer-medium"
-DEFAULT_UNIT_OF_MEASUREMENTS = "m³"
+DEFAULT_UNIT_OF_MEASUREMENT = "m³"
 
 DATA = "data"
 DATA_CLIENT = "client"
