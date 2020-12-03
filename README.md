@@ -147,7 +147,7 @@ attributes:
 state: Total water consumption daily
 
 attributes:
-   date: Rading day date
+	date: Rading day date
 	avg: Last 30 days average consumption
 	min: Last 30 days min value
 	max: Last 30 days max value
@@ -160,7 +160,7 @@ attributes:
 state: Total water consumption daily (x days ago)
 
 attributes:
-   date: Rading day date
+	date: Rading day date
 	reading_state: E.g., approximate etc.
 ```
 
@@ -170,7 +170,7 @@ attributes:
 state: Total water consumption monthly
 
 attributes:
-   date: Reading month date
+	date: Reading month date
 	avg: Last 12 month average consumption
 	min: Last 12 month min value
 	max: Last 12 month max value
@@ -183,7 +183,7 @@ attributes:
 state: Total water consumption monthly (x month ago)
 
 attributes:
-   date: Reading month date
+	date: Reading month date
 	reading_state: E.g., approximate etc.
 ```
 
@@ -205,42 +205,42 @@ An example view of Meter data. It includes:
 
 ```
   - type: entities
-	show_header_toggle: false
-	entities:
-	  - type: attribute
-	    entity: sensor.read_your_meter
-	    attribute: meter_number
-	    name: Meter Number
-	  - entity: sensor.read_your_meter
-	    name: Total
-	  - entity: sensor.read_your_meter_daily
-	    type: custom:multiple-entity-row
-	    name: Daily
-	    show_state: false
-	    secondary_info: last-changed
-	    icon: mdi:calendar-today
-	    entities:
-	      - attribute: min
-	        name: Min
-	      - entity: sensor.read_your_meter_daily
-	        name: Current
-	        unit: ' '
-	      - attribute: max
-	        name: Max
-	  - entity: sensor.read_your_meter_monthly
-	    type: custom:multiple-entity-row
-	    name: Monthly
-	    show_state: false
-	    secondary_info: last-changed
-	    icon: mdi:calendar-month
-	    entities:
-	      - attribute: min
-	        name: Min
-	      - entity: sensor.read_your_meter_monthly
-	        name: Current
-	        unit: ' '
-	      - attribute: max
-	        name: Max
+		show_header_toggle: false
+		entities:
+			- type: attribute
+				entity: sensor.read_your_meter
+				attribute: meter_number
+				name: Meter Number
+			- entity: sensor.read_your_meter
+				name: Total
+			- entity: sensor.read_your_meter_daily
+				type: custom:multiple-entity-row
+				name: Daily
+				show_state: false
+				secondary_info: last-changed
+				icon: mdi:calendar-today
+				entities:
+					- attribute: min
+						name: Min
+					- entity: sensor.read_your_meter_daily
+						name: Current
+						unit: ' '
+					- attribute: max
+						name: Max
+			- entity: sensor.read_your_meter_monthly
+				type: custom:multiple-entity-row
+				name: Monthly
+				show_state: false
+				secondary_info: last-changed
+				icon: mdi:calendar-month
+				entities:
+					- attribute: min
+						name: Min
+					- entity: sensor.read_your_meter_monthly
+						name: Current
+						unit: ' '
+					- attribute: max
+						name: Max
 ```
 
 ### Threshold Cards
