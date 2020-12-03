@@ -8,7 +8,7 @@ from homeassistant.helpers.entity import Entity
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
 from homeassistant.const import (
-    CONF_UNIT_OF_MEASUREMENT
+    CONF_NAME, CONF_UNIT_OF_MEASUREMENT
 )
 
 from .const import (
@@ -40,7 +40,7 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
 
     # Immediate refresh
     await coordinator.async_request_refresh()
-    
+
     entities = [ReadYourMeterSensor(hass, discovery_info, coordinator)]
     for d in discovery_info.get(CONF_DAILY):
         entities.append(ReadYourMeterSensor(hass, discovery_info, coordinator, 'daily', d))
@@ -55,22 +55,23 @@ class ReadYourMeterSensor(Entity):
     def __init__(self, hass, config, coordinator, period=None, index=None) -> None:
         """Init sensor"""
         self._hass = hass
+        self._name = config.get(CONF_NAME, DEFAULT_NAME)
         self._coordinator = coordinator
         self._period = period
         self._index = index
         self._icon = DEFAULT_ICON
         self._client = hass.data[DOMAIN_DATA][DATA_CLIENT]
         self._unit_of_measurement = config.get(CONF_UNIT_OF_MEASUREMENT)
-        _LOGGER.debug(f"Add sensor period:{self._period} index:{self._index} icon:{ self._icon}")
+        _LOGGER.debug(f"Add sensor name:{self._name} period:{self._period} index:{self._index} icon:{self._icon}")
 
     @property
     def name(self):
         """Return the name of the sensor."""
         if not self._period:
-            return DEFAULT_NAME
+            return self._name
         elif self._index == 0:
-            return '{} {}'.format(DEFAULT_NAME, self._period)
-        return '{} {} {}'.format(DEFAULT_NAME, self._period, self._index)
+            return '{} {}'.format(self._name, self._period)
+        return '{} {} {}'.format(self._name, self._period, self._index)
 
     @property
     def state(self):
@@ -100,7 +101,11 @@ class ReadYourMeterSensor(Entity):
                 }
         else:
             attributes = {
-                "meter_number": self._client.meter_number
+                "meter_number": self._client.meter_number,
+                "forecast": self._client.forecast,
+                "low_consumption": self._client.low_consumption,
+                "house_hold_avg": self._client.house_hold_avg,
+                "messages": self._client.messages_count
             }
         return attributes
 

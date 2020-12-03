@@ -31,6 +31,10 @@ class Client:
         self._password = password
         self._meter_number = None
         self._last_read = None
+        self._forecast = None
+        self._low_consumption = None
+        self._house_hold_avg = None
+        self._messages_count = None
         self._daily_table = []
         self._monthly_table = []
 
@@ -70,6 +74,26 @@ class Client:
                     self._last_read = element.text
                 except NoSuchElementException:
                     pass
+                try:
+                    element = driver.find_element_by_id('spn_forecast')
+                    self._forecast = element.text
+                except NoSuchElementException:
+                    pass
+                try:
+                    element = driver.find_element_by_id('spn_low_consumption')
+                    self._low_consumption = element.text
+                except NoSuchElementException:
+                    pass
+                try:
+                    element = driver.find_element_by_id('spn_house_hold_avg')
+                    self._house_hold_avg = element.text
+                except NoSuchElementException:
+                    pass
+                try:
+                    element = driver.find_element_by_id('cphMain_spn_messages_count')
+                    self._messages_count = element.text
+                except NoSuchElementException:
+                    pass
                 # Navigate to my consumption age
                 driver.get(urljoin(self._host, 'Consumption.aspx#0'))
                 try:
@@ -81,7 +105,7 @@ class Client:
                 # _LOGGER.debug(f"{driver.current_url}")
                 # Switch to daily table view
                 element = driver.find_element_by_id('btn_table')
-                webdriver.ActionChains(driver).move_to_element(element).click(element).perform()            
+                webdriver.ActionChains(driver).move_to_element(element).click(element).perform()
                 try:
                     WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.CLASS_NAME, 'AlertsTable')))
                 except TimeoutException:
@@ -146,14 +170,14 @@ class Client:
             return float(table[-1 - index][1])
         except IndexError:
            return None
- 
+
     def state(self, period, index=0):
         """Return consumption state"""
         try:
             table = self._monthly_table if period == 'monthly' else self._daily_table
             return table[-1 - index][4]
         except IndexError:
-           return None    
+           return None
 
     def date(self, period, index=0):
         """Return consumption date"""
@@ -161,7 +185,7 @@ class Client:
             table = self._monthly_table if period == 'monthly' else self._daily_table
             return table[-1 - index][0]
         except IndexError:
-           return None    
+           return None
 
     def statistics(self, period):
         """Return consumption statistics"""
@@ -184,3 +208,22 @@ class Client:
     @property
     def last_read(self):
         return self._last_read
+
+    @property
+    def forecast(self):
+        return self._forecast
+
+    @property
+    def low_consumption(self):
+        return self._low_consumption
+
+    @property
+    def house_hold_avg(self):
+        return self._house_hold_avg
+
+    @property
+    def messages_count(self):
+        message_count = 0
+        if self._messages_count:
+            message_count = [int(s) for s in self._messages_count.split() if s.isdigit()][0]
+        return message_count

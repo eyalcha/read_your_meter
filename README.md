@@ -92,7 +92,7 @@ read_your_meter:
 | `username` | Yes | Account username
 | `password` | Yes | Account password
 | `host` | No | Selenuim url (path & port) **Default** http://localhost:4444
-| `name` | No |  NOT SUPPORTED YET Sensors prefix **Default** Read your meter
+| `name` | No | Sensor prefix name **Default** Read your meter
 | `scan_interval` | No | NOT SUPPORTED YET **Default**: 1800 sec
 | `unit_of_measurement` | No | Consumption unit of measurement **Default**: m³
 | `daily` | No | List of days information, starting 0 as today and up to 3 (three days ago). **Default** 0
@@ -135,6 +135,10 @@ state: Total water consumption
 
 attributes:
 	meter_number: Meter number
+	forecast: This month forecast consumption
+	low_consumption: Max low price consumption
+	house_hold_avg: House holde monthly average
+	messages: Number of messages
 ```
 
 ### `sensor.read_your_meter_daily`
@@ -284,7 +288,7 @@ automation:
 	      data_template:
 	        message: >
 	          Daily water usage {{ states('sensor.read_your_meter_daily') }} has exceeded daily threshold, please check for leaks.
-  
+
 ```
 
 ---

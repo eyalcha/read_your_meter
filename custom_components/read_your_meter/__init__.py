@@ -39,7 +39,7 @@ CONFIG_SCHEMA = vol.Schema({
         vol.Optional(CONF_HOST, default=DEFAULT_HOST): cv.url,
         vol.Optional(CONF_NAME, DEFAULT_NAME): cv.string,
         vol.Optional(CONF_SCAN_INTERVAL): cv.time_period,
-        vol.Optional(CONF_UNIT_OF_MEASUREMENT, default=DEFAULT_UNIT_OF_MEASUREMENT): cv.string,        
+        vol.Optional(CONF_UNIT_OF_MEASUREMENT, default=DEFAULT_UNIT_OF_MEASUREMENT): cv.string,
         vol.Optional(CONF_DAILY, default=DEFAULT_DAILY): vol.All(
             cv.ensure_list, [vol.Range(min=0, max=3)]
         ),
