@@ -130,11 +130,11 @@ read_your_meter:
 
 ### `sensor.read_your_meter`
 
-```
+```yaml
 state: Total water consumption
 
 attributes:
-	meter_number: Meter number
+  meter_number: Meter number
 	forecast: This month forecast consumption
 	low_consumption: Max low price consumption
 	house_hold_avg: House holde monthly average
@@ -143,7 +143,7 @@ attributes:
 
 ### `sensor.read_your_meter_daily`
 
-```
+```yaml
 state: Total water consumption daily
 
 attributes:
@@ -156,7 +156,7 @@ attributes:
 
 ### `sensor.read_your_meter_daily_<x>`
 
-```
+```yaml
 state: Total water consumption daily (x days ago)
 
 attributes:
@@ -166,7 +166,7 @@ attributes:
 
 ### `sensor.read_your_meter_monthly`
 
-```
+```yaml
 state: Total water consumption monthly
 
 attributes:
@@ -179,7 +179,7 @@ attributes:
 
 ### `sensor.read_your_meter_monthly_<x>`
 
-```
+```yaml
 state: Total water consumption monthly (x month ago)
 
 attributes:
