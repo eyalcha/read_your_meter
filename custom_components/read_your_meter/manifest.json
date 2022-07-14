@@ -1,6 +1,7 @@
 {
   "domain": "read_your_meter",
   "name": "Read Your Meter",
+  "version": "1.0.12",
   "documentation": "",
   "dependencies": [],
   "codeowners": ["@eyalcha"],
