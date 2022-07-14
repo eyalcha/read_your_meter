@@ -5,6 +5,5 @@
   "documentation": "",
   "dependencies": [],
   "codeowners": ["@eyalcha"],
-  "requirements": ["selenium", "beautifulsoup4"],
-  "version": "1.0.11"
+  "requirements": ["selenium", "beautifulsoup4"]
 }
